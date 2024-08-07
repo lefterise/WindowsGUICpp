@@ -1,5 +1,4 @@
-
- # WinGui Library
+# WinGui Library
  
  A lightweight C++ wrapper over windows API calls to create UIs.
  Gives an object-oriented api on creating windows and controls
@@ -15,7 +14,7 @@ choose `Add Reference...`. Tick WinGui from the dialog.
 Right-click on your project and click `Properties`. Go to the `VC++ Directories`
 Set `include directories` to point to the folder that contains WinGui
 
-## Usage example:
+## Usage example - Creating a Window:
 Create a window with two buttons, a label, a textbox, a listbox and a combobox.
  ```cpp
 #include <WinGui\Application.h>
@@ -51,8 +50,14 @@ int main(){
 	return 0;
 }
 ```
-<img src="https://github.com/lefterise/WindowsGUICpp/blob/main/doc/screenshot1.png" style="width: 50%; height: 50%"></img>
 
+## Result 
+
+<p align="center">
+<img src="https://github.com/lefterise/WindowsGUICpp/blob/main/doc/screenshot1.png?raw=true" width="240" height="250"></img>
+</p>
+
+## Usage example - Event Handlers:
 Add event handlers for button, listbox and combobox
 
 ```cpp
@@ -147,4 +152,3 @@ Window--|> Button
 Window--|> Listbox
 Window--|> Combobox
 ```
-
