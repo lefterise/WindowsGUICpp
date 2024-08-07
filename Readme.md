@@ -51,7 +51,7 @@ int main(){
 	return 0;
 }
 ```
-<img src="https://github.com/lefterise/WindowsGUICpp/blob/main/doc/screenshot1.png"></img>
+<img src="https://github.com/lefterise/WindowsGUICpp/blob/main/doc/screenshot1.png" style="width: 50%; height: 50%"></img>
 
 Add event handlers for button, listbox and combobox
 
@@ -146,6 +146,5 @@ Window--|> Label
 Window--|> Button
 Window--|> Listbox
 Window--|> Combobox
-```
 ```
 
