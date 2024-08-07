@@ -6,66 +6,76 @@
 #include <WinGui\Combobox.h>
 #include <WinGui\Label.h>
 
-int main(int argc, char* argv[]) {    
-    WindowClass wc(L"StandardWindow");
-    Window window(wc, L"My window", 250, 240);
+int main(int argc, char* argv[]) {
     Font segoe(L"Segoe UI");
-    window.setOnDestroyAction([]() { PostQuitMessage(0); });
+    WindowClass wc(L"mywin");
+    Window dlgDemo(wc, L"Demo window", 250, 240);
 
-    auto b1 = window.addButton("Button 1", 10, 10, 100, 30);
-    auto b2 = window.addButton("Button 2", 120, 10, 100, 30);
-    auto label = window.addLabel("Label 1:", 10, 58, 100, 30);
-    auto tb = window.addTextbox("", 140, 50, 80, 25);
-    auto lb = window.addListbox(10, 90, 210, 100);
-    auto cb = window.addCombobox(60, 50, 70, 130);
+    auto btnGetListItem = dlgDemo.addButton("Get listbox Item", 10, 10, 100, 30);
+    auto btnGetComboItem = dlgDemo.addButton("Get combo Item", 120, 10, 100, 30);
+    auto label = dlgDemo.addLabel("Color:", 10, 58, 100, 30);
+    auto txtName = dlgDemo.addTextbox("", 140, 50, 80, 25);
+    auto lbShape = dlgDemo.addListbox(10, 90, 210, 100);
+    auto cbColor = dlgDemo.addCombobox(60, 50, 70, 130);
 
+    btnGetListItem->setFont(segoe);
+    btnGetComboItem->setFont(segoe);
     label->setFont(segoe);
-    b1->setFont(segoe);
-    b2->setFont(segoe);    
-    tb->setFont(segoe);    
-    lb->setFont(segoe);
-    cb->setFont(segoe);
+    txtName->setFont(segoe);
+    lbShape->setFont(segoe);
+    cbColor->setFont(segoe);
 
-    lb->addItem("Item 1");
-    lb->addItem("Item 2");
-    lb->addItem("Item 3");
+    lbShape->addItem("Circle");
+    lbShape->addItem("Square");
 
-    cb->addItem("Item 1");
-    cb->addItem("Item 2");
-    cb->addItem("Item 3");
+    cbColor->addItem("Red");
+    cbColor->addItem("Green");
 
-    b1->setCommand([&](int e) {
-        if (e == BN_CLICKED) {
-            size_t selIndex = lb->getSelectedItem();
-            if (selIndex != -1) {
-                auto selItem = lb->getItem(selIndex);
-                MessageBoxA(window.hwnd, selItem.c_str(), "Information", MB_OK | MB_ICONINFORMATION);
+    dlgDemo.setOnDestroyAction([]() { PostQuitMessage(0); });
+    dlgDemo.show();
+
+
+    btnGetListItem->setCommand(
+        [&](int e) {
+            if (e == BN_CLICKED) {
+                size_t selIndex = lbShape->getSelectedItem();
+                if (selIndex != -1) {
+                    auto selectedItemText = lbShape->getItem(selIndex);
+                    MessageBoxA(dlgDemo.hwnd, selectedItemText.c_str(), "Information", MB_OK);
+                }
             }
         }
-    });
-    
-    b2->setCommand([&](int e) {
-        if (e == BN_CLICKED) {
-            size_t selIndex = cb->getSelectedItem();
-            if (selIndex != -1) {
-                auto selItem = cb->getItem(selIndex);
-                MessageBoxA(window.hwnd, selItem.c_str(), "Information", MB_OK | MB_ICONINFORMATION);
+    );
+
+    btnGetComboItem->setCommand(
+        [&](int e) {
+            if (e == BN_CLICKED) {
+                size_t selIndex = cbColor->getSelectedItem();
+                if (selIndex != -1) {
+                    auto selectedItemText = cbColor->getItem(selIndex);
+                    MessageBoxA(dlgDemo.hwnd, selectedItemText.c_str(), "Information", MB_OK);
+                }
             }
         }
-        });
+    );
 
-    lb->setCommand([&window](int e) {
-        if (e == LBN_SELCHANGE) {
-            std::cout << "Listbox selection changed"<< std::endl;
-        }        
-    });
-
-    cb->setCommand([&window](int e) {
-        if (e == CBN_SELCHANGE) {
-            std::cout << "Combobox selection changed" << std::endl;
+    lbShape->setCommand(
+        [&](int e) {
+            if (e == LBN_SELCHANGE) {
+                std::cout << "Listbox selection changed" << std::endl;
+            }
         }
-     });
-    window.show();
+    );
+
+    cbColor->setCommand(
+        [&](int e) {
+            if (e == CBN_SELCHANGE) {
+                std::cout << "Combobox selection changed" << std::endl;
+            }
+        }
+    );
+
+    dlgDemo.show();
     Application::run();
 
     return 0;
