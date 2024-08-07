@@ -1,10 +1,10 @@
-#include "Application.h"
-#include "Window.h"
-#include "Button.h"
-#include "Listbox.h"
-#include "Textbox.h"
-#include "Combobox.h"
-#include "Label.h"
+#include <WinGui\Application.h>
+#include <WinGui\Window.h>
+#include <WinGui\Button.h>
+#include <WinGui\Listbox.h>
+#include <WinGui\Textbox.h>
+#include <WinGui\Combobox.h>
+#include <WinGui\Label.h>
 
 int main(int argc, char* argv[]) {    
     WindowClass wc(L"StandardWindow");
