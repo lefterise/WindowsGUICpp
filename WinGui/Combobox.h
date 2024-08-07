@@ -25,9 +25,13 @@ public:
         SendMessageA(hwnd, CB_ADDSTRING, 0, (LPARAM)item);
     }
 
-    long getSelectedItem() {
+    long getSelectedIndex() {
         long selIndex = SendMessageA(hwnd, CB_GETCURSEL, 0, 0);
         return selIndex;
+    }
+
+    void setSelectedIndex(int index) {
+        SendMessageA(hwnd, CB_SETCURSEL, index, 0);        
     }
 
     std::string getItem(int index) {
@@ -41,6 +45,10 @@ public:
 
     void setFont(Font& font) {
         SendMessage(hwnd, WM_SETFONT, (WPARAM)font.hFont, TRUE);
+    }
+
+    void setText(const char* text) {
+        SetWindowTextA(hwnd, text);
     }
 
 private:

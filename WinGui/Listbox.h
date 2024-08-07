@@ -26,9 +26,13 @@ public:
         window.setMenuCommand(id, std::move(action));
     }
 
-    long getSelectedItem() {
+    long getSelectedIndex() {
         long selIndex = SendMessageA(hwnd, LB_GETCURSEL, 0, 0);
         return selIndex;
+    }
+
+    void setSelectedIndex(int index) {
+        SendMessageA(hwnd, LB_SETCURSEL, index, 0);
     }
 
     std::string getItem(int index) {
@@ -43,6 +47,7 @@ public:
     void setFont(Font& font) {
         SendMessage(hwnd, WM_SETFONT, (WPARAM)font.hFont, TRUE);
     }
+
 private:
     Window& window;
     size_t id;

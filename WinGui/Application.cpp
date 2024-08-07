@@ -1,4 +1,13 @@
 #include "Application.h"
+#include <commctrl.h>
+#pragma comment(lib, "comctl32.lib")
+
+void Application::init() {
+    INITCOMMONCONTROLSEX icex;
+    icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+    icex.dwICC = ICC_WIN95_CLASSES;
+    InitCommonControlsEx(&icex);
+}
 
 void Application::run() {
     MSG msg = {};

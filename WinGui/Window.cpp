@@ -3,6 +3,7 @@
 #include "Listbox.h"
 #include "Textbox.h"
 #include "Combobox.h"
+#include "Progressbar.h"
 #include "Label.h"
 #include "Font.h"
 
@@ -16,7 +17,7 @@ Window::Window(WindowClass& windowClass, std::wstring title, int width, int heig
 
     Application::setCreateHandler(handler);
     hwnd = CreateWindowExW(
-        0,
+        WS_EX_WINDOWEDGE,
         windowClass.getClassName(),
         title.c_str(),
         WS_OVERLAPPEDWINDOW,
@@ -66,6 +67,15 @@ std::shared_ptr<Textbox> Window::addTextbox(const char* text, int x, int y, int 
 std::shared_ptr<Combobox> Window::addCombobox(int x, int y, int w, int h) {
     auto cbox = std::make_shared<Combobox>(*this, ++ids, x, y, w, h);
     return cbox;
+}
+
+std::shared_ptr<Progressbar> Window::addProgressbar(int x, int y, int w, int h) {
+    auto cbox = std::make_shared<Progressbar>(*this, x, y, w, h);
+    return cbox;
+}
+
+void Window::setTitle(const char* text) {
+    SetWindowTextA(hwnd, text);
 }
 
 void Window::setMenuCommand(size_t id, std::function<void(int e)>&& action) {

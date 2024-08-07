@@ -64,7 +64,7 @@ Add event handlers for button, listbox and combobox
     btnGetListItem->setCommand(
         [&](int e) {
             if (e == BN_CLICKED) {
-                size_t selIndex = lbShape->getSelectedItem();
+                size_t selIndex = lbShape->getSelectedIndex();
                 if (selIndex != -1) {
                     auto selectedItemText = lbShape->getItem(selIndex);
                     MessageBoxA(dlgDemo.hwnd, selectedItemText.c_str(), "Information", MB_OK);
@@ -102,6 +102,7 @@ class Application{
 class Window {
   Window(windowclass, title, x, y, width, height)
   show()
+  setTitle(text)
   addLabel(label, x, y, width, height)
   addTextbox(text, x, y, width, height)
   addButton(label, x, y, width, height)
@@ -130,8 +131,8 @@ class Button{
 class Listbox{
   setCommand(callback)
   setFont(Font&)
-  getSelectedItem()
-  setSelectedItem(index)  
+  getSelectedIndex()
+  setSelectedIndex(index)
   addItem(text)
   getItem(index)
 }
@@ -140,10 +141,11 @@ class Listbox{
 class Combobox{
   setCommand(callback)
   setFont(Font&)
-  getSelectedItem()
-  setSelectedItem(index)
+  getSelectedIndex()
+  setSelectedIndex(index)
   addItem(text)
   getItem(index)
+  setText(text)
 }
 
 Window--|> Textbox

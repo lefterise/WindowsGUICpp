@@ -28,6 +28,7 @@ WM_CAPTURECHANGED
 
 class Application {
 public:
+    static void init();
     static void run();
     static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
     static void registerWindowHandler(HWND window, std::function <LRESULT(HWND, UINT, WPARAM, LPARAM)>&& handler);

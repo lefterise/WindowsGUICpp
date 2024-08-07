@@ -25,6 +25,10 @@ public:
         SendMessage(hwnd, WM_SETFONT, (WPARAM)font.hFont, TRUE);
     }
 
+    void setText(const char* text) {
+        SetWindowTextA(hwnd, text);
+    }
+
 private:
     Window& window;
     size_t id;
