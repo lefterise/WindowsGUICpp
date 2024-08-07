@@ -1,6 +1,10 @@
 #include "Window.h"
 #include "Button.h"
 #include "Listbox.h"
+#include "Textbox.h"
+#include "Label.h"
+#include "Font.h"
+
 //https://learn.microsoft.com/en-us/windows/win32/winmsg/windowing
 
 Window::Window(WindowClass& windowClass, std::wstring title, int width, int height)
@@ -46,6 +50,16 @@ std::shared_ptr<Button> Window::addButton(const char* label, int x, int y, int w
 std::shared_ptr<Listbox> Window::addListbox(int x, int y, int w, int h) {
     auto listbox = std::make_shared<Listbox>(*this, ++ids, x, y, w, h);
     return listbox;
+}
+
+std::shared_ptr<Label> Window::addLabel(const char* labeltext, int x, int y, int w, int h) {
+    auto label = std::make_shared<Label>(*this, ++ids, labeltext, x, y, w, h);
+    return label;
+}
+
+std::shared_ptr<Textbox> Window::addTextbox(const char* text, int x, int y, int w, int h) {
+    auto textbox = std::make_shared<Textbox>(*this, ++ids, text, x, y, w, h);
+    return textbox;
 }
 
 void Window::setMenuCommand(size_t id, std::function<void(int e)>&& action) {

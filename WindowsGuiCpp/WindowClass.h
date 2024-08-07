@@ -9,7 +9,7 @@ public:
         wc.lpfnWndProc = Application::WindowProc;
         wc.hInstance = GetModuleHandle(NULL);
         wc.lpszClassName = className;
-        wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+        wc.hbrBackground = (HBRUSH)(COLOR_WINDOW);
         wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 
         RegisterClassW(&wc);

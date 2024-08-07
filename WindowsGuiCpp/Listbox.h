@@ -1,6 +1,7 @@
 #pragma once
 #include "Window.h"
 #include "Control.h"
+#include "Font.h"
 
 class Listbox {
 public:
@@ -9,7 +10,7 @@ public:
         : window(window)
         , id(id)
     {
-        hwnd = CreateWindowA("LISTBOX", NULL, WS_VISIBLE | WS_CHILD | LBS_STANDARD,
+        hwnd = CreateWindowExA(WS_EX_CLIENTEDGE, "LISTBOX", NULL, WS_VISIBLE | WS_CHILD | LBS_NOTIFY | LBS_HASSTRINGS | WS_VSCROLL,
             x, y, w, h, window.hwnd, (HMENU)id, (HINSTANCE)GetWindowLongPtr(window.hwnd, GWLP_HINSTANCE), NULL);
 
         if (hwnd == NULL) {
@@ -37,6 +38,10 @@ public:
         str.resize(length);
         SendMessageA(hwnd, LB_GETTEXT, index, (LPARAM)str.data());
         return str;
+    }
+
+    void setFont(Font& font) {
+        SendMessage(hwnd, WM_SETFONT, (WPARAM)font.hFont, TRUE);
     }
 private:
     Window& window;
