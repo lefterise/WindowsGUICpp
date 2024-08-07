@@ -2,6 +2,7 @@
 #include "Button.h"
 #include "Listbox.h"
 #include "Textbox.h"
+#include "Combobox.h"
 #include "Label.h"
 #include "Font.h"
 
@@ -60,6 +61,11 @@ std::shared_ptr<Label> Window::addLabel(const char* labeltext, int x, int y, int
 std::shared_ptr<Textbox> Window::addTextbox(const char* text, int x, int y, int w, int h) {
     auto textbox = std::make_shared<Textbox>(*this, ++ids, text, x, y, w, h);
     return textbox;
+}
+
+std::shared_ptr<Combobox> Window::addCombobox(int x, int y, int w, int h) {
+    auto cbox = std::make_shared<Combobox>(*this, ++ids, x, y, w, h);
+    return cbox;
 }
 
 void Window::setMenuCommand(size_t id, std::function<void(int e)>&& action) {
