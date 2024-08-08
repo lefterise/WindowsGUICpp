@@ -26,22 +26,21 @@ Create a window with two buttons, a label, a textbox, a listbox and a combobox.
 #include <WinGui\Label.h>
 
 int main(){
-    Font segoe(L"Segoe UI");
     WindowClass wc(L"mywin");
     Window dlgDemo(wc, L"Demo window", 250, 240);
 
-    auto btnGetListItem = dlgDemo.addButton("Get listbox Item", 10, 10, 100, 30);
-    auto btnGetComboItem = dlgDemo.addButton("Get combo Item", 120, 10, 100, 30);
-    auto label = dlgDemo.addLabel("Color:", 10, 58, 100, 30);
-    auto txtName = dlgDemo.addTextbox("", 140, 50, 80, 25);
-    auto lbShape = dlgDemo.addListbox(10, 90, 210, 100);
-    auto cbColor = dlgDemo.addCombobox(60, 50, 70, 130);
+    Button btnGetListItem( dlgDemo, "Get listbox Item", 10, 10, 100, 30);
+    Button btnGetComboItem(dlgDemo, "Get combo Item",  120, 10, 100, 30);
+    Label label(dlgDemo, "Color:", 10, 58, 100, 30);
+    Textbox txtName(dlgDemo, "", 140, 50, 80, 25);
+    Listbox lbShape(dlgDemo, 10, 90, 210, 100);
+    Combobox cbColor(dlgDemo, 60, 50, 70, 130);
 
-    lbShape->addItem("Circle");
-    lbShape->addItem("Square");
+    lbShape.addItem("Circle");
+    lbShape.addItem("Square");
 
-    cbColor->addItem("Red");
-    cbColor->addItem("Green");
+    cbColor.addItem("Red");
+    cbColor.addItem("Green");
       
     dlgDemo.setOnDestroyAction([]() { PostQuitMessage(0); });
     dlgDemo.show();
@@ -61,30 +60,22 @@ int main(){
 Add event handlers for button, listbox and combobox
 
 ```cpp
-    btnGetListItem->setCommand(
+    btnGetListItem.setCommand(dlgDemo,
         [&](int e) {
             if (e == BN_CLICKED) {
-                size_t selIndex = lbShape->getSelectedIndex();
+                size_t selIndex = lbShape.getSelectedIndex();
                 if (selIndex != -1) {
-                    auto selectedItemText = lbShape->getItem(selIndex);
+                    auto selectedItemText = lbShape.getItem(selIndex);
                     MessageBoxA(dlgDemo.hwnd, selectedItemText.c_str(), "Information", MB_OK);
                 }
             }
         }
     );
     
-    lbShape->setCommand(
+    lbShape.setCommand(dlgDemo,
         [&](int e) {
             if (e == LBN_SELCHANGE) {
                 std::cout << "Listbox selection changed" << std::endl;
-            }
-        }
-    );
-
-    cbColor->setCommand(
-        [&](int e) {
-            if (e == CBN_SELCHANGE) {
-                std::cout << "Combobox selection changed" << std::endl;
             }
         }
     );
@@ -96,40 +87,40 @@ Add event handlers for button, listbox and combobox
 classDiagram
 
 class Application{
+  init()
   run()
 }
 
 class Window {
-  Window(windowclass, title, x, y, width, height)
+  Window(windowclass, title, x, y, w, h)
   show()
   setTitle(text)
-  addLabel(label, x, y, width, height)
-  addTextbox(text, x, y, width, height)
-  addButton(label, x, y, width, height)
-  addListbox(x, y, width, height)
-  addCombobox(x, y, width, height)
 }
 
 class Textbox {
-  setCommand(callback)
+  Textbox(window, text, x, y, w, h)
+  setCommand(window, callback)
   setFont(Font&)
   setText(text)
 }
 
 class Label{
-  setCommand(callback)
+  Label(window, text, x, y, w, h)
+  setCommand(window, callback)
   setFont(Font&)
   setText(text)
 }
 
 class Button{
-  setCommand(callback)
+  Button(window, text, x, y, w, h)
+  setCommand(window, callback)
   setFont(Font&)
   setText(text)
 }
 
 class Listbox{
-  setCommand(callback)
+  Listbox(window, x, y, w, h)
+  setCommand(window, callback)
   setFont(Font&)
   getSelectedIndex()
   setSelectedIndex(index)
@@ -139,7 +130,8 @@ class Listbox{
 
 
 class Combobox{
-  setCommand(callback)
+  Combobox(window, x, y, w, h)
+  setCommand(window, callback)
   setFont(Font&)
   getSelectedIndex()
   setSelectedIndex(index)
@@ -148,9 +140,9 @@ class Combobox{
   setText(text)
 }
 
-Window--|> Textbox
-Window--|> Label
-Window--|> Button
-Window--|> Listbox
-Window--|> Combobox
+Window--> Textbox
+Window--> Label
+Window--> Button
+Window--> Listbox
+Window--> Combobox
 ```

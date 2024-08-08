@@ -5,9 +5,8 @@
 class Button {
 public:
 
-Button(Window& window, size_t id, std::string label, int x, int y, int w, int h)
-: window(window)
-, id(id)
+Button(Window& window, const std::string& label, int x, int y, int w, int h)
+: id(window.getNextId())
 {
     hwnd = CreateWindowA("BUTTON", label.c_str(), WS_TABSTOP | WS_VISIBLE | WS_CHILD ,
         x, y, w, h, window.hwnd, (HMENU)id, (HINSTANCE)GetWindowLongPtr(window.hwnd, GWLP_HINSTANCE), NULL);
@@ -17,7 +16,7 @@ Button(Window& window, size_t id, std::string label, int x, int y, int w, int h)
     }
 }
 
-void setCommand(std::function<void(int e)>&& action) {
+void setCommand(Window& window, std::function<void(int e)>&& action) {
     window.setMenuCommand(id, std::move(action));
 }
 
@@ -30,7 +29,6 @@ void setText(const char* text) {
 }
 
 private:
-Window& window;
 size_t id;
 HWND hwnd = 0;
 };

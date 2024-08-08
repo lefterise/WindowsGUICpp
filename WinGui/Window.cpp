@@ -4,6 +4,7 @@
 #include "Textbox.h"
 #include "Combobox.h"
 #include "Progressbar.h"
+#include "Slider.h"
 #include "Label.h"
 #include "Font.h"
 
@@ -44,34 +45,12 @@ void Window::setOnDestroyAction(std::function<void()>&& action) {
     onDestroy = std::move(action);
 }
 
-std::shared_ptr<Button> Window::addButton(const char* label, int x, int y, int w, int h) {
-    auto button = std::make_shared<Button>(*this, ++ids, label, x, y, w, h);
-    return button;
+size_t Window::getNextId() {
+    return ++ids;
 }
 
-std::shared_ptr<Listbox> Window::addListbox(int x, int y, int w, int h) {
-    auto listbox = std::make_shared<Listbox>(*this, ++ids, x, y, w, h);
-    return listbox;
-}
-
-std::shared_ptr<Label> Window::addLabel(const char* labeltext, int x, int y, int w, int h) {
-    auto label = std::make_shared<Label>(*this, ++ids, labeltext, x, y, w, h);
-    return label;
-}
-
-std::shared_ptr<Textbox> Window::addTextbox(const char* text, int x, int y, int w, int h) {
-    auto textbox = std::make_shared<Textbox>(*this, ++ids, text, x, y, w, h);
-    return textbox;
-}
-
-std::shared_ptr<Combobox> Window::addCombobox(int x, int y, int w, int h) {
-    auto cbox = std::make_shared<Combobox>(*this, ++ids, x, y, w, h);
-    return cbox;
-}
-
-std::shared_ptr<Progressbar> Window::addProgressbar(int x, int y, int w, int h) {
-    auto cbox = std::make_shared<Progressbar>(*this, x, y, w, h);
-    return cbox;
+void Window::setHorizontalScrollbarRange(int min, int max) {
+    SetScrollRange(hwnd, SB_HORZ, min, max, TRUE);
 }
 
 void Window::setTitle(const char* text) {
@@ -80,6 +59,10 @@ void Window::setTitle(const char* text) {
 
 void Window::setMenuCommand(size_t id, std::function<void(int e)>&& action) {
     commands[id] = std::move(action);
+}
+
+void Window::setMessageHandler(HWND hwnd, UINT message, std::function<void(WPARAM e)>&& action) {
+    messageHandlers[std::make_pair(hwnd, message)] = std::move(action);
 }
 
 LRESULT Window::windowHandler(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -106,5 +89,11 @@ LRESULT Window::windowHandler(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         }
         return 0;
     }
+
+    auto itMessageHandler = messageHandlers.find(std::make_pair((HWND)lParam, uMsg));
+    if (itMessageHandler != messageHandlers.end()) {
+        itMessageHandler->second(wParam);
+    }
+
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }

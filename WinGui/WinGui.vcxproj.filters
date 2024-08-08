@@ -48,6 +48,12 @@
     <ClInclude Include="Progressbar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Scrollbar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Slider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Window.cpp">

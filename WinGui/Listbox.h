@@ -6,9 +6,8 @@
 class Listbox {
 public:
 
-    Listbox(Window& window, size_t id, int x, int y, int w, int h)
-        : window(window)
-        , id(id)
+    Listbox(Window& window, int x, int y, int w, int h)
+    : id(window.getNextId())
     {
         hwnd = CreateWindowExA(WS_EX_CLIENTEDGE, "LISTBOX", NULL, WS_VISIBLE | WS_CHILD | LBS_NOTIFY | LBS_HASSTRINGS | WS_VSCROLL,
             x, y, w, h, window.hwnd, (HMENU)id, (HINSTANCE)GetWindowLongPtr(window.hwnd, GWLP_HINSTANCE), NULL);
@@ -22,7 +21,7 @@ public:
         SendMessageA(hwnd, LB_ADDSTRING, 0, (LPARAM)item);
     }
 
-    void setCommand(std::function<void(int e)>&& action) {
+    void setCommand(Window& window, std::function<void(int e)>&& action) {
         window.setMenuCommand(id, std::move(action));
     }
 
@@ -49,7 +48,6 @@ public:
     }
 
 private:
-    Window& window;
     size_t id;
     HWND hwnd = 0;
 };

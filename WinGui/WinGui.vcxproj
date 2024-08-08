@@ -26,6 +26,8 @@
     <ClInclude Include="Label.h" />
     <ClInclude Include="Listbox.h" />
     <ClInclude Include="Progressbar.h" />
+    <ClInclude Include="Scrollbar.h" />
+    <ClInclude Include="Slider.h" />
     <ClInclude Include="Textbox.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WindowClass.h" />
