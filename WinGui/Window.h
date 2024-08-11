@@ -4,10 +4,10 @@
 #include <vector>
 #include "Control.h"
 //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexa#remarks
-
+//https://learn.microsoft.com/en-us/windows/win32/controls/common-control-window-classes
 class Window {
 public:
-    Window(WindowClass& windowClass, std::wstring title, int width, int height);
+    Window(WindowClass& windowClass, std::wstring title, int width, int height, DWORD style = WS_OVERLAPPEDWINDOW);
     void show();
     void setOnDestroyAction(std::function<void()>&& action);
     size_t getNextId();    
@@ -15,15 +15,20 @@ public:
     void setHorizontalScrollbarRange(int min, int max);
 
     void setMenuCommand(size_t id, std::function<void(int e)>&& action);
-    void setMessageHandler(HWND hwnd, UINT message, std::function<void(WPARAM e)>&& action);
+    void setMessageHandler(UINT message, std::function<bool(WPARAM, LPARAM)>&& action);
 
+    operator HWND() const {
+        return hwnd;
+    }
+
+    ~Window();
 private:
     LRESULT windowHandler(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
     
     Application& app;
     WindowClass& windowClass;    
     std::map<size_t, std::function<void(int)>> commands;
-    std::map<std::pair<HWND, UINT>, std::function<void(WPARAM)>> messageHandlers;
+    std::multimap<UINT, std::function<bool(WPARAM, LPARAM)>> messageHandlers;
     std::function<void()> onDestroy;
     size_t ids = 0;
 public: 

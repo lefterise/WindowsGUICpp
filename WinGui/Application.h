@@ -33,7 +33,7 @@ public:
     static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
     static void registerWindowHandler(HWND window, std::function <LRESULT(HWND, UINT, WPARAM, LPARAM)>&& handler);
     static void setCreateHandler(std::function <LRESULT(HWND, UINT, WPARAM, LPARAM)>&& handler);
-
+    static void eraseWindowHandler(HWND window);
 private:
     static std::map<HWND, std::function<LRESULT(HWND, UINT, WPARAM, LPARAM)>> windowHandlers;
     static std::function<LRESULT(HWND, UINT, WPARAM, LPARAM)> createHandler;

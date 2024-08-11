@@ -31,7 +31,7 @@ LRESULT CALLBACK Application::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LP
             return createHandler(hwnd, uMsg, wParam, lParam);
         }
         else {
-            std::cout << "ERROR" << std::endl;
+            std::cout << "Message for unknown window" << std::endl;
         }
     }
 
@@ -44,6 +44,10 @@ void Application::registerWindowHandler(HWND window, std::function <LRESULT(HWND
 
 void Application::setCreateHandler(std::function <LRESULT(HWND, UINT, WPARAM, LPARAM)>&& handler) {
     createHandler = std::move(handler);
+}
+
+void Application::eraseWindowHandler(HWND window) {
+    windowHandlers.erase(window);
 }
 
 std::map<HWND, std::function<LRESULT(HWND, UINT, WPARAM, LPARAM)>> Application::windowHandlers;

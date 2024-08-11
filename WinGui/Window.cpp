@@ -10,7 +10,7 @@
 
 //https://learn.microsoft.com/en-us/windows/win32/winmsg/windowing
 
-Window::Window(WindowClass& windowClass, std::wstring title, int width, int height)
+Window::Window(WindowClass& windowClass, std::wstring title, int width, int height, DWORD style)
 : app(app)
 , windowClass(windowClass)
 {
@@ -21,7 +21,7 @@ Window::Window(WindowClass& windowClass, std::wstring title, int width, int heig
         WS_EX_WINDOWEDGE,
         windowClass.getClassName(),
         title.c_str(),
-        WS_OVERLAPPEDWINDOW,
+        style,
         CW_USEDEFAULT, CW_USEDEFAULT, width, height,
         NULL,
         NULL,
@@ -35,6 +35,10 @@ Window::Window(WindowClass& windowClass, std::wstring title, int width, int heig
     }
 
     Application::registerWindowHandler(hwnd, handler);
+}
+
+Window::~Window() {
+    Application::eraseWindowHandler(hwnd);
 }
 
 void Window::show() {
@@ -61,8 +65,8 @@ void Window::setMenuCommand(size_t id, std::function<void(int e)>&& action) {
     commands[id] = std::move(action);
 }
 
-void Window::setMessageHandler(HWND hwnd, UINT message, std::function<void(WPARAM e)>&& action) {
-    messageHandlers[std::make_pair(hwnd, message)] = std::move(action);
+void Window::setMessageHandler(UINT message, std::function<bool(WPARAM, LPARAM)>&& action) {
+    messageHandlers.emplace(message, std::move(action));
 }
 
 LRESULT Window::windowHandler(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -90,9 +94,11 @@ LRESULT Window::windowHandler(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         return 0;
     }
 
-    auto itMessageHandler = messageHandlers.find(std::make_pair((HWND)lParam, uMsg));
-    if (itMessageHandler != messageHandlers.end()) {
-        itMessageHandler->second(wParam);
+    auto handlersForMessage = messageHandlers.equal_range(uMsg);
+
+    for (auto it = handlersForMessage.first; it != handlersForMessage.second; ++it) {
+        bool wasHandled = it->second(wParam, lParam);
+        if (wasHandled) return 0;
     }
 
     return DefWindowProc(hwnd, uMsg, wParam, lParam);

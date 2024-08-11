@@ -23,16 +23,27 @@ public:
         //SetScrollRange(hwnd, SB_CTL, min, max, TRUE);        
     }
 
-    void setValue(int value) {
+    void setPosition(int value) {
         SendMessage(hwnd, SBM_SETPOS, value, TRUE);
     }
 
-    int getValue() {
+    int getPosition() {
         return SendMessage(hwnd, SBM_GETPOS, 0, 0);
     }
 
-    void setMessageHandler(Window& window, UINT message, std::function<void(WPARAM e)>&& action) {
-        window.setMessageHandler(hwnd, message, std::move(action));
+    void setScrollHandler(Window& window, std::function<void(short notificationCode, short value)>&& action) {
+        //i don't capture this because it may be moved
+        auto handler = [action, hwnd(this->hwnd)](WPARAM e, LPARAM lParam) {
+            if ((HWND)lParam != hwnd) return false;
+            short notificationCode = LOWORD(e);
+            short value = HIWORD(e);
+            defaultScrollHandler(hwnd, notificationCode, value);
+            action(notificationCode, value);
+            return true;
+            };
+
+        LONG style = GetWindowLong(hwnd, GWL_STYLE);
+        window.setMessageHandler((style & TBS_VERT) ? WM_VSCROLL : WM_HSCROLL, handler);
     }
 
     void setScrollInfo(int min, int max, int pageSize, int position) {
@@ -43,35 +54,40 @@ public:
         si.nMin = min;
         si.nMax = max;
         si.nPos = position;
-        this->pageSize = pageSize;
         SendMessage(hwnd, SBM_SETSCROLLINFO, 0, (LPARAM)&si);
     }
 
-    void defaultScrollHandler(WPARAM wParam) {
-        int action = LOWORD(wParam);
-        int pos = HIWORD(wParam);
+    static void defaultScrollHandler(HWND hwnd, short notificationCode, short value) {
+        SCROLLINFO si;
+        si.cbSize = sizeof(SCROLLINFO);
+        si.fMask = SIF_ALL;
+        SendMessage(hwnd, SBM_GETSCROLLINFO, 0, (LPARAM)&si);
 
-        int scrollPos = getValue();
-        switch (action) {
+        int scrollPos = si.nPos;
+
+        switch (notificationCode) {
         case SB_LINEUP:      // Scroll one line up
-            scrollPos = max(scrollPos - 1, 0);
+            scrollPos = max(scrollPos - 1, si.nMin);
             break;
         case SB_LINEDOWN:    // Scroll one line down
-            scrollPos = min(scrollPos + 1, 100);
+            scrollPos = min(scrollPos + 1, si.nMax);
             break;
         case SB_PAGEUP:      // Scroll one page up
-            scrollPos = max(scrollPos - pageSize, 0);
+            scrollPos = max(scrollPos - si.nPage, si.nMin);
             break;
         case SB_PAGEDOWN:    // Scroll one page down
-            scrollPos = min(scrollPos + pageSize, 100);
+            scrollPos = min(scrollPos + si.nPage, si.nMax);
             break;
         case SB_THUMBTRACK:  // Drag thumb position
-            scrollPos = pos;
+            scrollPos = value;
             break;
         }
-        setValue(scrollPos);
+        SendMessage(hwnd, SBM_SETPOS, scrollPos, TRUE);
+    }
+
+    operator HWND() const {
+        return hwnd;
     }
 private:
     HWND hwnd = 0;
-    int pageSize = 10;
 };

@@ -7,10 +7,9 @@ class Listbox {
 public:
 
     Listbox(Window& window, int x, int y, int w, int h)
-    : id(window.getNextId())
     {
         hwnd = CreateWindowExA(WS_EX_CLIENTEDGE, "LISTBOX", NULL, WS_VISIBLE | WS_CHILD | LBS_NOTIFY | LBS_HASSTRINGS | WS_VSCROLL,
-            x, y, w, h, window.hwnd, (HMENU)id, (HINSTANCE)GetWindowLongPtr(window.hwnd, GWLP_HINSTANCE), NULL);
+            x, y, w, h, window.hwnd, (HMENU)window.getNextId(), (HINSTANCE)GetWindowLongPtr(window.hwnd, GWLP_HINSTANCE), NULL);
 
         if (hwnd == NULL) {
             throw std::exception("Listbox creation failed");
@@ -22,6 +21,7 @@ public:
     }
 
     void setCommand(Window& window, std::function<void(int e)>&& action) {
+        int id = GetDlgCtrlID(hwnd);
         window.setMenuCommand(id, std::move(action));
     }
 
@@ -47,7 +47,10 @@ public:
         SendMessage(hwnd, WM_SETFONT, (WPARAM)font.hFont, TRUE);
     }
 
+    operator HWND() const {
+        return hwnd;
+    }
+
 private:
-    size_t id;
     HWND hwnd = 0;
 };

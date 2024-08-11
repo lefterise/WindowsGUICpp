@@ -23,16 +23,29 @@ public:
         SendMessage(hwnd, TBM_SETRANGE, 0, MAKELPARAM(min, max));
     }
 
-    void setValue(short value) {
+    void setPosition(short value) {
         SendMessage(hwnd, TBM_SETPOS, TRUE, value);
     }
 
-    short getValue() {
+    short getPosition() {
         return SendMessage(hwnd, TBM_GETPOS, 0, 0);
     }
 
-    void setMessageHandler(Window& window, UINT message, std::function<void(WPARAM e)>&& action) {
-        window.setMessageHandler(hwnd, message, std::move(action));
+    void setScrollHandler(Window& window, std::function<void(short notificationCode, short value)>&& action) {        
+        auto handler = [action, hwnd(this->hwnd)](WPARAM e, LPARAM lParam) {
+            if ((HWND)lParam != hwnd) return false;
+            short notificationCode = LOWORD(e); //eg TB_THUMBTRACK
+            short value = HIWORD(e);
+            action(notificationCode, value);
+            return true;
+        };
+
+        LONG style = GetWindowLong(hwnd, GWL_STYLE);
+        window.setMessageHandler((style & TBS_VERT) ? WM_VSCROLL : WM_HSCROLL, handler);       
+    }
+
+    operator HWND() const {
+        return hwnd;
     }
 
 private:

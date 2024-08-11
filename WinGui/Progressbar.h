@@ -28,6 +28,10 @@ public:
     void setValue(short value) {
         SendMessage(hwnd, PBM_SETPOS, value, 0);
     }
+
+    operator HWND() const {
+        return hwnd;
+    }
     
 private:
     HWND hwnd = 0;
