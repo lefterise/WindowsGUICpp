@@ -28,6 +28,14 @@ public:
         SetWindowTextA(hwnd, text);
     }
 
+    std::string getText() {
+        int length = GetWindowTextLength(hwnd);
+        std::string text;
+        text.resize(length);
+        GetWindowTextA(hwnd, &text[0], text.length());
+        return text;
+    }
+
     operator HWND() const {
         return hwnd;
     }
