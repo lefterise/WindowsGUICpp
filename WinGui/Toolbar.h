@@ -16,7 +16,7 @@ public:
         struct Button {
             int imageId;
             BYTE style;
-            std::string caption;
+            std::wstring caption;
             std::function<void(int e)> action;
             std::function<void(int x, int y)> menu;
         };
@@ -26,18 +26,18 @@ public:
             , window(window)
         {}
 
-        ButtonBuilder& addButton(int imageId, Style style, std::string caption, std::function<void(int e)>&& action) {
-            buttons.push_back({ imageId, (BYTE)style, caption, std::move(action), nullptr });
+        ButtonBuilder& addButton(int imageId, Style style, std::wstring caption, std::function<void(int e)>&& action) {
+            buttons.push_back({ imageId, (BYTE)style, std::move(caption), std::move(action), nullptr });
             return *this;
         }
 
         ButtonBuilder& addSeparator() {
-            buttons.push_back({ 0, BTNS_SEP, "", nullptr });
+            buttons.push_back({ 0, BTNS_SEP, L"", nullptr });
             return *this;
         }
 
-        ButtonBuilder& addDropdownMenu(int imageId, std::string caption, std::function<void(int x, int y)> menuCallback) {
-            buttons.push_back({ imageId, BTNS_DROPDOWN, caption, nullptr, std::move(menuCallback) });
+        ButtonBuilder& addDropdownMenu(int imageId, std::wstring caption, std::function<void(int x, int y)> menuCallback) {
+            buttons.push_back({ imageId, BTNS_DROPDOWN, std::move(caption), nullptr, std::move(menuCallback) });
             return *this;
         }
 
@@ -59,7 +59,7 @@ public:
                                 NMTOOLBARW* dropdown = (NMTOOLBARW*)l;
                                 if (dropdown->iItem != buttonCommandId) return false; //event is about another button
                                 RECT rc;
-                                SendMessage(dropdown->hdr.hwndFrom, TB_GETRECT, (WPARAM)dropdown->iItem, (LPARAM)&rc);
+                                SendMessageW(dropdown->hdr.hwndFrom, TB_GETRECT, (WPARAM)dropdown->iItem, (LPARAM)&rc);
                                 MapWindowPoints(dropdown->hdr.hwndFrom, HWND_DESKTOP, (LPPOINT)&rc, 2);
 
                                 menuCallback(rc.left, rc.bottom);
@@ -75,11 +75,11 @@ public:
                 i++;
             }
 
-            SendMessage(hwnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
-            SendMessage(hwnd, TB_ADDBUTTONSA, (WPARAM)buttons.size(), (LPARAM)btns);//todo use W for unicode support
+            SendMessageW(hwnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
+            SendMessageW(hwnd, TB_ADDBUTTONSW, (WPARAM)buttons.size(), (LPARAM)btns);//todo use W for unicode support
             free(btns);
 
-            SendMessage(hwnd, TB_AUTOSIZE, 0, 0);
+            SendMessageW(hwnd, TB_AUTOSIZE, 0, 0);
         }
 
     private:
@@ -92,11 +92,11 @@ public:
     Toolbar(Window& window, int x, int y, int w, int h)
     {
 
-        hwnd = CreateWindowExA(
-            0, TOOLBARCLASSNAMEA, NULL,
+        hwnd = CreateWindowExW(
+            0, TOOLBARCLASSNAMEW, NULL,
             WS_CHILD | WS_VISIBLE | TBSTYLE_TOOLTIPS,
             x, y, w, h, window.hwnd, (HMENU)window.getNextId(),
-            (HINSTANCE)GetWindowLongPtr(window.hwnd, GWLP_HINSTANCE),
+            (HINSTANCE)GetWindowLongPtrW(window.hwnd, GWLP_HINSTANCE),
             NULL
         );
 
@@ -111,20 +111,20 @@ public:
     }
 
     void setFont(Font& font) {
-        SendMessage(hwnd, WM_SETFONT, (WPARAM)font.hFont, TRUE);
+        SendMessageW(hwnd, WM_SETFONT, (WPARAM)font.hFont, TRUE);
     }
 
-    void setText(const char* text) {
-        SetWindowTextA(hwnd, text);
+    void setText(const wchar_t* text) {
+        SetWindowTextW(hwnd, text);
     }
 
     int getButtonCount() const {
-        return SendMessage(hwnd, TB_BUTTONCOUNT, 0, 0);
+        return SendMessageW(hwnd, TB_BUTTONCOUNT, 0, 0);
     }
 
     int getButtonCommandId(int index) const{
         TBBUTTON tbButton;
-        SendMessage(hwnd, TB_GETBUTTON, index, (LPARAM)&tbButton);
+        SendMessageW(hwnd, TB_GETBUTTON, index, (LPARAM)&tbButton);
         return tbButton.idCommand;
     }
 

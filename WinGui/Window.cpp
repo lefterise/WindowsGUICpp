@@ -10,7 +10,7 @@
 
 //https://learn.microsoft.com/en-us/windows/win32/winmsg/windowing
 
-Window::Window(WindowClass& windowClass, std::wstring title, int width, int height, DWORD style)
+Window::Window(WindowClass& windowClass, const wchar_t* title, int width, int height, DWORD style)
 : app(app)
 , windowClass(windowClass)
 {
@@ -20,7 +20,7 @@ Window::Window(WindowClass& windowClass, std::wstring title, int width, int heig
     hwnd = CreateWindowExW(
         WS_EX_WINDOWEDGE,
         windowClass.getClassName(),
-        title.c_str(),
+        title,
         style,
         CW_USEDEFAULT, CW_USEDEFAULT, width, height,
         NULL,

@@ -33,11 +33,11 @@ public:
     , wc(L"ControlsDemo")
     , dlgDemo(wc, L"Controls demo", 250, 280)
     , cbColor(dlgDemo, 10, 15, 100, 130)
-    , btnGetComboItem(dlgDemo, "Get combo Item", 120, 10, 100, 30)    
+    , btnGetComboItem(dlgDemo, L"Get combo Item", 120, 10, 100, 30)    
     , lbShape(dlgDemo, 10, 50, 210, 100)
-    , btnGetListItem(dlgDemo, "Get listbox Item", 10, 150, 100, 30)
-    , txtName(dlgDemo, "", 120, 152, 100, 25)
-    , label(dlgDemo, "--------Scroll------", 10, 190, 100, 18)
+    , btnGetListItem(dlgDemo, L"Get listbox Item", 10, 150, 100, 30)
+    , txtName(dlgDemo, L"", 120, 152, 100, 25)
+    , label(dlgDemo, L"--------Scroll------", 10, 190, 100, 18)
     , scrollbar(dlgDemo, 10, 210, 210, 20)
     {            
         scrollbar.setScrollInfo(0, 99, 30, 10);
@@ -45,7 +45,7 @@ public:
         scrollbar.setScrollHandler(dlgDemo,
             [&](short notificationCode, short value) {
                 int position = scrollbar.getPosition();                
-                label.setText(std::to_string(position).c_str());               
+                label.setText(std::to_wstring(position).c_str());
             }
 
         );
@@ -57,12 +57,12 @@ public:
         lbShape.setFont(segoe);
         cbColor.setFont(segoe);
 
-        lbShape.addItem("Circle");
-        lbShape.addItem("Square");
+        lbShape.addItem(L"Circle");
+        lbShape.addItem(L"Square");
         lbShape.setSelectedIndex(0);
 
-        cbColor.addItem("Red");
-        cbColor.addItem("Green");
+        cbColor.addItem(L"Red");
+        cbColor.addItem(L"Green");
         cbColor.setSelectedIndex(1);        
 
         btnGetListItem.setCommand(dlgDemo,
@@ -71,7 +71,7 @@ public:
                     size_t selIndex = lbShape.getSelectedIndex();
                     if (selIndex != -1) {
                         auto selectedItemText = lbShape.getItem(selIndex);
-                        MessageBoxA(dlgDemo.hwnd, selectedItemText.c_str(), "Information", MB_OK);
+                        MessageBoxW(dlgDemo.hwnd, selectedItemText.c_str(), L"Information", MB_OK);
                     }
                 }
             }
@@ -83,7 +83,7 @@ public:
                     size_t selIndex = cbColor.getSelectedIndex();
                     if (selIndex != -1) {
                         auto selectedItemText = cbColor.getItem(selIndex);
-                        MessageBoxA(dlgDemo.hwnd, selectedItemText.c_str(), "Information", MB_OK);
+                        MessageBoxW(dlgDemo.hwnd, selectedItemText.c_str(), L"Information", MB_OK);
                     }
                 }
             }

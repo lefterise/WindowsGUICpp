@@ -6,12 +6,12 @@ public:
 
     Slider(Window& window, int x, int y, int w, int h, bool isVertical = false)
     {
-        hwnd = CreateWindowEx(
-            0, TRACKBAR_CLASS, NULL,
+        hwnd = CreateWindowExW(
+            0, TRACKBAR_CLASSW, NULL,
             WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_BOTH | (isVertical ? TBS_VERT : TBS_HORZ),
             x, y, w, h,
             window.hwnd, NULL,
-            (HINSTANCE)GetWindowLongPtr(window.hwnd, GWLP_HINSTANCE), NULL
+            (HINSTANCE)GetWindowLongPtrW(window.hwnd, GWLP_HINSTANCE), NULL
         );
 
         if (hwnd == NULL) {
@@ -20,15 +20,15 @@ public:
     }
 
     void setRange(short min, short max) {
-        SendMessage(hwnd, TBM_SETRANGE, 0, MAKELPARAM(min, max));
+        SendMessageW(hwnd, TBM_SETRANGE, 0, MAKELPARAM(min, max));
     }
 
     void setPosition(short value) {
-        SendMessage(hwnd, TBM_SETPOS, TRUE, value);
+        SendMessageW(hwnd, TBM_SETPOS, TRUE, value);
     }
 
     short getPosition() {
-        return SendMessage(hwnd, TBM_GETPOS, 0, 0);
+        return SendMessageW(hwnd, TBM_GETPOS, 0, 0);
     }
 
     void setScrollHandler(Window& window, std::function<void(short notificationCode, short value)>&& action) {        
@@ -40,7 +40,7 @@ public:
             return true;
         };
 
-        LONG style = GetWindowLong(hwnd, GWL_STYLE);
+        LONG style = GetWindowLongW(hwnd, GWL_STYLE);
         window.setMessageHandler((style & TBS_VERT) ? WM_VSCROLL : WM_HSCROLL, handler);       
     }
 

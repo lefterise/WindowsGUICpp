@@ -7,7 +7,7 @@
 //https://learn.microsoft.com/en-us/windows/win32/controls/common-control-window-classes
 class Window {
 public:
-    Window(WindowClass& windowClass, std::wstring title, int width, int height, DWORD style = WS_OVERLAPPEDWINDOW);
+    Window(WindowClass& windowClass, const wchar_t* title, int width, int height, DWORD style = WS_OVERLAPPEDWINDOW);
     void show();
     void setOnDestroyAction(std::function<void()>&& action);
     size_t getNextId();    

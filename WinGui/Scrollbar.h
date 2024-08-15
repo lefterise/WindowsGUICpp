@@ -5,12 +5,12 @@ public:
 
     Scrollbar(Window& window, int x, int y, int w, int h, bool isVertical = false)
     {
-        hwnd = CreateWindowExA(
-            0, "SCROLLBAR", NULL,
+        hwnd = CreateWindowExW(
+            0, L"SCROLLBAR", NULL,
             WS_CHILD | WS_VISIBLE | (isVertical ? SBS_VERT : SBS_HORZ),
             x, y, w, h,
             window.hwnd, NULL,
-            (HINSTANCE)GetWindowLongPtr(window.hwnd, GWLP_HINSTANCE), NULL
+            (HINSTANCE)GetWindowLongPtrW(window.hwnd, GWLP_HINSTANCE), NULL
         );
 
         if (hwnd == NULL) {
@@ -19,16 +19,16 @@ public:
     }
 
     void setRange(int min, int max) {
-        SendMessage(hwnd, SBM_SETRANGE, min, max);
+        SendMessageW(hwnd, SBM_SETRANGE, min, max);
         //SetScrollRange(hwnd, SB_CTL, min, max, TRUE);        
     }
 
     void setPosition(int value) {
-        SendMessage(hwnd, SBM_SETPOS, value, TRUE);
+        SendMessageW(hwnd, SBM_SETPOS, value, TRUE);
     }
 
     int getPosition() {
-        return SendMessage(hwnd, SBM_GETPOS, 0, 0);
+        return SendMessageW(hwnd, SBM_GETPOS, 0, 0);
     }
 
     void setScrollHandler(Window& window, std::function<void(short notificationCode, short value)>&& action) {
@@ -40,7 +40,7 @@ public:
             defaultScrollHandler(hwnd, notificationCode, value);
             action(notificationCode, value);
             return true;
-            };
+        };
 
         LONG style = GetWindowLong(hwnd, GWL_STYLE);
         window.setMessageHandler((style & TBS_VERT) ? WM_VSCROLL : WM_HSCROLL, handler);
@@ -54,14 +54,14 @@ public:
         si.nMin = min;
         si.nMax = max;
         si.nPos = position;
-        SendMessage(hwnd, SBM_SETSCROLLINFO, 0, (LPARAM)&si);
+        SendMessageW(hwnd, SBM_SETSCROLLINFO, 0, (LPARAM)&si);
     }
 
     static void defaultScrollHandler(HWND hwnd, short notificationCode, short value) {
         SCROLLINFO si;
         si.cbSize = sizeof(SCROLLINFO);
         si.fMask = SIF_ALL;
-        SendMessage(hwnd, SBM_GETSCROLLINFO, 0, (LPARAM)&si);
+        SendMessageW(hwnd, SBM_GETSCROLLINFO, 0, (LPARAM)&si);
 
         int scrollPos = si.nPos;
 
@@ -82,7 +82,7 @@ public:
             scrollPos = value;
             break;
         }
-        SendMessage(hwnd, SBM_SETPOS, scrollPos, TRUE);
+        SendMessageW(hwnd, SBM_SETPOS, scrollPos, TRUE);
     }
 
     operator HWND() const {

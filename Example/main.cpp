@@ -9,9 +9,9 @@ int main(int argc, char* argv[]) {
 
     WindowClass mainWindowClass(L"mainWindow");
     Window window(mainWindowClass, L"main window", 185, 170, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU );
-    Button btnStandardControls(window, "Standard Controls",10, 10, 150,30);
-    Button btnCommonControls(  window, "Common Controls",  10, 50, 150, 30);
-    Button btnDraw(            window, "Draw",             10, 90, 150, 30);    
+    Button btnStandardControls(window, L"Standard Controls",10, 10, 150,30);
+    Button btnCommonControls(  window, L"Common Controls",  10, 50, 150, 30);
+    Button btnDraw(            window, L"Draw",             10, 90, 150, 30);    
 
     btnStandardControls.setCommand(window,
         [&](int e) {

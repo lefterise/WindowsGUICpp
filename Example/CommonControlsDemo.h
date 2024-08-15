@@ -31,20 +31,20 @@ public:
     , slider(window, 10, 50, 210, 40)
     , progressbar(window, 10, 100, 210, 14)
     {           
-        contextMenu.addItem(window, L"Hello", [&](int e) { MessageBoxA(window.hwnd, "Hello", "Information", MB_OK); });
-        contextMenu.addItem(window, L"World", [&](int e) { MessageBoxA(window.hwnd, "World", "Information", MB_OK); });        
+        contextMenu.addItem(window, L"Hello", [&](int e) { MessageBoxW(window.hwnd, L"Hello", L"Information", MB_OK); });
+        contextMenu.addItem(window, L"World", [&](int e) { MessageBoxW(window.hwnd, L"World", L"Information", MB_OK); });        
 
         toolbar.buttonBuilder(window)
-            .addButton(0, Toolbar::ButtonBuilder::Style::Button, "Press", [&](int e) { MessageBoxA(window.hwnd, "Press", "Information", MB_OK); })
-            .addButton(0, Toolbar::ButtonBuilder::Style::Check, "Check", [&](int e) { MessageBoxA(window.hwnd, "Check", "Information", MB_OK); })
-            .addDropdownMenu(0, "Menu", 
+            .addButton(0, Toolbar::ButtonBuilder::Style::Button, L"Press", [&](int e) { MessageBoxW(window.hwnd, L"Press", L"Information", MB_OK); })
+            .addButton(0, Toolbar::ButtonBuilder::Style::Check, L"Check", [&](int e) { MessageBoxW(window.hwnd, L"Check", L"Information", MB_OK); })
+            .addDropdownMenu(0, L"Menu", 
                 [&](int x, int y) {
                     contextMenu.track(window, x, y);
                 }
             )            
             .addSeparator()
-            .addButton(0, Toolbar::ButtonBuilder::Style::ButtonGroup, "Choice1", [&](int e) { MessageBoxA(window.hwnd, "Choice1", "Information", MB_OK); })
-            .addButton(0, Toolbar::ButtonBuilder::Style::ButtonGroup, "Choice2", [&](int e) { MessageBoxA(window.hwnd, "Choice2", "Information", MB_OK); })
+            .addButton(0, Toolbar::ButtonBuilder::Style::ButtonGroup, L"Choice1", [&](int e) { MessageBoxW(window.hwnd, L"Choice1", L"Information", MB_OK); })
+            .addButton(0, Toolbar::ButtonBuilder::Style::ButtonGroup, L"Choice2", [&](int e) { MessageBoxW(window.hwnd, L"Choice2", L"Information", MB_OK); })
             .build();
 
         slider.setRange(0, 20);

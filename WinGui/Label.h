@@ -4,10 +4,10 @@
 
 class Label {
 public:
-    Label(Window& window, const std::string& text, int x, int y, int w, int h)
+    Label(Window& window, const wchar_t* text, int x, int y, int w, int h)
     {
-        hwnd = CreateWindowA("STATIC", text.c_str(), WS_VISIBLE | WS_CHILD | ES_LEFT,
-            x, y, w, h, window.hwnd, (HMENU)window.getNextId(), (HINSTANCE)GetWindowLongPtr(window.hwnd, GWLP_HINSTANCE), NULL);
+        hwnd = CreateWindowW(L"STATIC", text, WS_VISIBLE | WS_CHILD | ES_LEFT,
+            x, y, w, h, window.hwnd, (HMENU)window.getNextId(), (HINSTANCE)GetWindowLongPtrW(window.hwnd, GWLP_HINSTANCE), NULL);
 
         if (hwnd == NULL) {
             throw std::exception("Label creation failed");
@@ -20,18 +20,18 @@ public:
     }
 
     void setFont(Font& font) {
-        SendMessage(hwnd, WM_SETFONT, (WPARAM)font.hFont, TRUE);
+        SendMessageW(hwnd, WM_SETFONT, (WPARAM)font.hFont, TRUE);
     }
 
-    void setText(const char* text) {
-        SetWindowTextA(hwnd, text);
+    void setText(const wchar_t* text) {
+        SetWindowTextW(hwnd, text);
     }
 
-    std::string getText() {
-        int length = GetWindowTextLength(hwnd);
-        std::string text;
+    std::wstring getText() {
+        int length = GetWindowTextLengthW(hwnd);
+        std::wstring text;
         text.resize(length);
-        GetWindowTextA(hwnd, &text[0], text.length());
+        GetWindowTextW(hwnd, &text[0], text.length());
         return text;
     }
 

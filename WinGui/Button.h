@@ -5,10 +5,10 @@
 class Button {
 public:
 
-Button(Window& window, const std::string& label, int x, int y, int w, int h)
+Button(Window& window, const wchar_t* label, int x, int y, int w, int h)
 {
-    hwnd = CreateWindowA("BUTTON", label.c_str(), WS_TABSTOP | WS_VISIBLE | WS_CHILD ,
-        x, y, w, h, window.hwnd, (HMENU)window.getNextId(), (HINSTANCE)GetWindowLongPtr(window.hwnd, GWLP_HINSTANCE), NULL);
+    hwnd = CreateWindowW(L"BUTTON", label, WS_TABSTOP | WS_VISIBLE | WS_CHILD ,
+        x, y, w, h, window.hwnd, (HMENU)window.getNextId(), (HINSTANCE)GetWindowLongPtrW(window.hwnd, GWLP_HINSTANCE), NULL);
 
     if (hwnd == NULL) {
         throw std::exception("Button creation failed");
@@ -21,18 +21,18 @@ void setCommand(Window& window, std::function<void(int e)>&& action) {
 }
 
 void setFont(Font& font) {
-    SendMessage(hwnd, WM_SETFONT, (WPARAM)font.hFont, TRUE);
+    SendMessageW(hwnd, WM_SETFONT, (WPARAM)font.hFont, TRUE);
 }
 
-void setText(const char* text) {
-    SetWindowTextA(hwnd, text);
+void setText(const wchar_t* text) {
+    SetWindowTextW(hwnd, text);
 }
 
-std::string getText() {
-    int length = GetWindowTextLength(hwnd);
-    std::string text;
+std::wstring getText() {
+    int length = GetWindowTextLengthW(hwnd);
+    std::wstring text;
     text.resize(length);
-    GetWindowTextA(hwnd, &text[0], text.length());
+    GetWindowTextW(hwnd, &text[0], text.length());
     return text;
 }
 

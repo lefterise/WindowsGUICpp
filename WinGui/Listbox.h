@@ -8,16 +8,16 @@ public:
 
     Listbox(Window& window, int x, int y, int w, int h)
     {
-        hwnd = CreateWindowExA(WS_EX_CLIENTEDGE, "LISTBOX", NULL, WS_VISIBLE | WS_CHILD | LBS_NOTIFY | LBS_HASSTRINGS | WS_VSCROLL,
-            x, y, w, h, window.hwnd, (HMENU)window.getNextId(), (HINSTANCE)GetWindowLongPtr(window.hwnd, GWLP_HINSTANCE), NULL);
+        hwnd = CreateWindowExW(WS_EX_CLIENTEDGE, L"LISTBOX", NULL, WS_VISIBLE | WS_CHILD | LBS_NOTIFY | LBS_HASSTRINGS | WS_VSCROLL,
+            x, y, w, h, window.hwnd, (HMENU)window.getNextId(), (HINSTANCE)GetWindowLongPtrW(window.hwnd, GWLP_HINSTANCE), NULL);
 
         if (hwnd == NULL) {
             throw std::exception("Listbox creation failed");
         }
     }
 
-    void addItem(const char* item) {
-        SendMessageA(hwnd, LB_ADDSTRING, 0, (LPARAM)item);
+    void addItem(const wchar_t* item) {
+        SendMessageW(hwnd, LB_ADDSTRING, 0, (LPARAM)item);
     }
 
     void setCommand(Window& window, std::function<void(int e)>&& action) {
@@ -26,25 +26,25 @@ public:
     }
 
     long getSelectedIndex() {
-        long selIndex = SendMessageA(hwnd, LB_GETCURSEL, 0, 0);
+        long selIndex = SendMessageW(hwnd, LB_GETCURSEL, 0, 0);
         return selIndex;
     }
 
     void setSelectedIndex(int index) {
-        SendMessageA(hwnd, LB_SETCURSEL, index, 0);
+        SendMessageW(hwnd, LB_SETCURSEL, index, 0);
     }
 
-    std::string getItem(int index) {
-        std::string str;
-        long length = SendMessageA(hwnd, LB_GETTEXTLEN, index, NULL);
+    std::wstring getItem(int index) {
+        std::wstring str;
+        long length = SendMessageW(hwnd, LB_GETTEXTLEN, index, NULL);
         if (length == LB_ERR) throw std::exception("Out of bounds");
         str.resize(length);
-        SendMessageA(hwnd, LB_GETTEXT, index, (LPARAM)str.data());
+        SendMessageW(hwnd, LB_GETTEXT, index, (LPARAM)str.data());
         return str;
     }
 
     void setFont(Font& font) {
-        SendMessage(hwnd, WM_SETFONT, (WPARAM)font.hFont, TRUE);
+        SendMessageW(hwnd, WM_SETFONT, (WPARAM)font.hFont, TRUE);
     }
 
     operator HWND() const {
