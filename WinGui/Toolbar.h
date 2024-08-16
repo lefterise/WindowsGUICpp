@@ -110,6 +110,19 @@ public:
         return builder;
     }
 
+    void setImageList(HIMAGELIST hImageList) {
+        SendMessage(hwnd, TB_SETIMAGELIST, 0, (LPARAM)hImageList);
+        SendMessageW(hwnd, TB_AUTOSIZE, 0, 0);
+    }
+    
+    void changeIcon(int buttonId, int imageId) {
+        TBBUTTONINFO tbbi;
+        tbbi.cbSize = sizeof(TBBUTTONINFO);
+        tbbi.dwMask = TBIF_IMAGE;
+        tbbi.iImage = imageId;
+        SendMessage(hwnd, TB_SETBUTTONINFO, (WPARAM)buttonId, (LPARAM)&tbbi);
+    }
+
     void setFont(Font& font) {
         SendMessageW(hwnd, WM_SETFONT, (WPARAM)font.hFont, TRUE);
     }

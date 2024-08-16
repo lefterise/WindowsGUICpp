@@ -24,6 +24,7 @@
     <ClInclude Include="Combobox.h" />
     <ClInclude Include="DeviceContext.h" />
     <ClInclude Include="Font.h" />
+    <ClInclude Include="ImageList.h" />
     <ClInclude Include="Label.h" />
     <ClInclude Include="Listbox.h" />
     <ClInclude Include="ContextMenu.h" />
@@ -32,6 +33,7 @@
     <ClInclude Include="Slider.h" />
     <ClInclude Include="Textbox.h" />
     <ClInclude Include="Toolbar.h" />
+    <ClInclude Include="Treeview.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WindowClass.h" />
     <ClInclude Include="WindowsMessages.h" />

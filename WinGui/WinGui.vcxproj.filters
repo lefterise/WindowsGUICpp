@@ -63,6 +63,12 @@
     <ClInclude Include="DeviceContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ImageList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Treeview.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Window.cpp">
