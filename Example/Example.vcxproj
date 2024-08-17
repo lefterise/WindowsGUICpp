@@ -150,6 +150,17 @@
     <ClInclude Include="CommonControlsDemo.h" />
     <ClInclude Include="ControlsDemo.h" />
     <ClInclude Include="DrawDemo.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Example.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\Users\Lefteris\Desktop\bell.bmp" />
+    <Image Include="..\..\..\Users\Lefteris\Desktop\briefcase.bmp" />
+    <Image Include="..\..\..\Users\Lefteris\Desktop\bulb.bmp" />
+    <Image Include="..\..\..\Users\Lefteris\Desktop\bulb_off.bmp" />
+    <Image Include="..\..\..\Users\Lefteris\Desktop\group.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

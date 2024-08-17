@@ -8,14 +8,17 @@ public:
         hwnd = CreateWindowW(WC_TABCONTROL, NULL,
             WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE,
             x, y, w, h, window.hwnd, NULL, (HINSTANCE)GetWindowLongPtrW(window.hwnd, GWLP_HINSTANCE), NULL);
-        
-        TCITEMW tie;
-        tie.mask = TCIF_TEXT;
-        tie.pszText = (wchar_t*)L"Tab 1";
-        SendMessageW(hwnd, TCM_INSERTITEMW, 0, (LPARAM)&tie);
+    }
 
-        tie.pszText = (wchar_t*)L"Tab 2";
-        SendMessageW(hwnd, TCM_INSERTITEMW, 1, (LPARAM)&tie);
+    void addTab(const wchar_t* caption, int insertPos = 0) {
+        TCITEMW tie = {};
+        tie.mask = TCIF_TEXT;
+        tie.pszText = (wchar_t*)caption;
+        SendMessageW(hwnd, TCM_INSERTITEMW, insertPos, (LPARAM)&tie);
+    }
+
+    void setActiveTab(int index) {
+        SendMessage(hwnd, TCM_SETCURSEL, (WPARAM)index, 0);
     }
 
     void setVisible(bool visible) {
