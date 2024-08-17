@@ -31,6 +31,10 @@ public:
         return SendMessageW(hwnd, TBM_GETPOS, 0, 0);
     }
 
+    void setVisible(bool visible) {
+        ShowWindow(hwnd, visible ? SW_SHOW : SW_HIDE);
+    }
+
     void setScrollHandler(Window& window, std::function<void(short notificationCode, short value)>&& action) {        
         auto handler = [action, hwnd(this->hwnd)](WPARAM e, LPARAM lParam) {
             if ((HWND)lParam != hwnd) return false;

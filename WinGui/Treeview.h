@@ -36,7 +36,10 @@ public:
         SendMessageW(hwnd, TVM_SETIMAGELIST, TVSIL_NORMAL, (LPARAM)hImageList);
     }
 
-    
+    void setVisible(bool visible) {
+        ShowWindow(hwnd, visible ? SW_SHOW : SW_HIDE);
+    }
+
     void setSelectionChangeListener(Window& window, std::function<void(LPNMTREEVIEW l)>&& callback) {
         window.setMessageHandler(WM_NOTIFY,
             [hwnd(this->hwnd), callback(std::move(callback))](WPARAM w, LPARAM l) -> bool {
@@ -50,5 +53,10 @@ public:
             }
         );
     }
+
+    operator HWND() const {
+        return hwnd;
+    }
+
     HWND hwnd;
 };

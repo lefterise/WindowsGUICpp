@@ -17,6 +17,10 @@ public:
     void setMenuCommand(size_t id, std::function<void(int e)>&& action);
     void setMessageHandler(UINT message, std::function<bool(WPARAM, LPARAM)>&& action);
 
+    void setVisible(bool visible) {
+        ShowWindow(hwnd, visible ? SW_SHOW : SW_HIDE);
+    }
+
     operator HWND() const {
         return hwnd;
     }

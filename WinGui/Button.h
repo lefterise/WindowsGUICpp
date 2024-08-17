@@ -36,6 +36,10 @@ std::wstring getText() {
     return text;
 }
 
+void setVisible(bool visible) {
+    ShowWindow(hwnd, visible ? SW_SHOW : SW_HIDE);
+}
+
 operator HWND() const {
     return hwnd;
 }

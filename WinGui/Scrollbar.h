@@ -57,6 +57,10 @@ public:
         SendMessageW(hwnd, SBM_SETSCROLLINFO, 0, (LPARAM)&si);
     }
 
+    void setVisible(bool visible) {
+        ShowWindow(hwnd, visible ? SW_SHOW : SW_HIDE);
+    }
+
     static void defaultScrollHandler(HWND hwnd, short notificationCode, short value) {
         SCROLLINFO si;
         si.cbSize = sizeof(SCROLLINFO);
@@ -84,6 +88,7 @@ public:
         }
         SendMessageW(hwnd, SBM_SETPOS, scrollPos, TRUE);
     }
+
 
     operator HWND() const {
         return hwnd;
