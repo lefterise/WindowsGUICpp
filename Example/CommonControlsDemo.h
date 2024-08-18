@@ -14,8 +14,10 @@
 #include <WinGui\DeviceContext.h>
 #include <WinGui\ImageList.h>
 #include <WinGui\Treeview.h>
+#include <WinGui\Listview.h>
 #include <WinGui\TabControl.H>
 #include <memory>
+#include <sstream>
 #include "resource.h"
 
 class CommonControlsDemo : public std::enable_shared_from_this<CommonControlsDemo> {
@@ -26,6 +28,7 @@ class CommonControlsDemo : public std::enable_shared_from_this<CommonControlsDem
     Slider slider;
     Progressbar progressbar;
     Treeview treeview;
+    Listview listview;
     ContextMenu contextMenu;
     Font segoe;
     Label label;
@@ -40,7 +43,8 @@ public:
         , toolbar(window, 0, 0, 0, 64)
         , slider(window, 10, 70, 210, 40)
         , progressbar(window, 10, 120, 200, 14)
-        , treeview(window, 20, 172, 180, 120)
+        , treeview(window, 20, 172, 180, 120, TVS_HASLINES | TVS_EDITLABELS)
+        , listview(window, 20, 172, 180, 120, LVS_REPORT | LVS_EDITLABELS)
         , segoe(L"Segoe UI")
         , label(window, L"This will show treeview selection", 10, 300, 210, 16)
         , tabcontrol(window,10,140,200,160)
@@ -71,16 +75,48 @@ public:
         
         treeview.setImageList(imagelist);
         toolbar.setImageList(imagelist);
-
+        listview.setImageList(imagelist, LVSIL_NORMAL);
+        listview.setImageList(imagelist, LVSIL_SMALL);
 
         auto root = treeview.addItem(NULL, L"Root", 2, 2);
         auto child1 = treeview.addItem(root, L"Child 1", 1, 1);
         auto child2 = treeview.addItem(root, L"Child 2", 4, 3);
 
+        listview.insertColumn(L"Col 1", 88, 0);
+        listview.insertColumn(L"Col 2", 88, 1);
+        listview.insertItem(L"Bell", 0, 0);
+        listview.setItem(L"Ding!", 0, 0,1);
+        listview.insertItem(L"Group", 1, 1);
+        listview.setItem(L"Hug", 0, 1, 1);
+
+        listview.addSelectionChangeHandler(window, [this](NMLISTVIEW* e) {
+            if (e->uChanged & LVIF_STATE && e->uNewState & LVIS_SELECTED) {
+                std::wstringstream s;
+                int index = -1;
+                while ((index = listview.getNextSelectedItem(index)) != -1) {
+                    s << listview.getItemText(index) << L" - " << listview.getItemText(index, 1) << L", ";
+                }
+            
+                label.setText(s.str().c_str());
+            }
+        });
+
+        listview.addEditLabelHandler(window, [this](NMLVDISPINFOW* e) {
+            if (e->item.pszText != NULL) {
+                listview.setItem(e->item.pszText, -1, e->item.iItem, e->item.iSubItem);                
+            }
+        });
+
+        treeview.addEditLabelHandler(window, [this](NMTVDISPINFOW* e) {
+            if (e->item.pszText != NULL) {
+                treeview.setItem(e->item.hItem, e->item.pszText);               
+            }
+        });
+
         treeview.expand(root, true);
         treeview.setSelectionChangeListener(window, [this, root, child1, child2](LPNMTREEVIEW l) { //note we capture the handles by value since they are local and would get out of scope
             auto selectedItem = treeview.getSelectedItem();
-
+            
             if (l->itemNew.hItem == root)
                 label.setText(L"Root");
 
@@ -89,17 +125,18 @@ public:
 
             if (l->itemNew.hItem == child2)
                 label.setText(L"child2");
-        });
+        });        
 
         tabcontrol.setFont(segoe);
         tabcontrol.addTab(L"Tab 1",0);
         tabcontrol.addTab(L"Tab 2",1);
         tabcontrol.setActiveTab(0);
-
+        listview.setVisible(false);
+        
         tabcontrol.setTabChangeListener(window, [this]() {
             int tab = tabcontrol.getCurrentTab();
-
             treeview.setVisible(tab == 0);
+            listview.setVisible(tab == 1);
         });
 
         label.setFont(segoe);
